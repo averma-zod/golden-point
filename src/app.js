@@ -4,9 +4,14 @@ import { Card3D } from "./components/Card3D.js";
 import { Dashboard } from "./components/Dashboard.js";
 import { CharterView } from "./components/CharterView.js";
 import { ModalsManager } from "./components/Modals.js";
+import { ParticleEngine } from "./effects/ParticleEngine.js";
+import { ScrollReveal, MagneticEffect, initRippleButtons, SmoothCountUp, applyGlowPulse } from "./effects/Interactions.js";
+import { HeroSmokeEffect } from "./effects/HeroSmoke.js";
+import { CinematicIntro } from "./effects/CinematicIntro.js";
+import { DopamineEngine } from "./effects/DopamineEngine.js";
 
 /**
- * Main Application Controller
+ * Main Application Controller — Enhanced with Immersive Effects
  */
 
 class App {
@@ -19,15 +24,73 @@ class App {
     this.dashboardComponent = null;
     this.charterComponent = null;
     this.modals = null;
+
+    // Effect engines
+    this.particleEngine = null;
+    this.scrollReveal = null;
+    this.heroSmoke = null;
+    this.dopamineEngine = null;
   }
 
   init() {
     this.circles = loadCircles();
     this.currentCircle = getActiveCircle();
 
-    this.initDOM();
-    this.initToastListener();
-    this.render();
+    // Launch cinematic intro, then init app UI
+    const intro = new CinematicIntro(() => {
+      this.initEffects();
+      this.initDOM();
+      this.initToastListener();
+      this.render();
+      this.postRenderEffects();
+    });
+    intro.init();
+  }
+
+  initEffects() {
+    // Global particle engine (cursor trails, click bursts)
+    this.particleEngine = new ParticleEngine();
+    this.particleEngine.init();
+
+    // Scroll reveal observer
+    this.scrollReveal = new ScrollReveal();
+    this.scrollReveal.init();
+
+    // Ripple effects on all buttons
+    initRippleButtons();
+
+    // Dopamine Engine: Live Ticker, Scarcity Radar, Hidden Collectibles, Audio Ticks
+    this.dopamineEngine = new DopamineEngine(this.particleEngine);
+    this.dopamineEngine.init();
+
+    // Magnetic hover effects on interactive elements
+    setTimeout(() => {
+      MagneticEffect.apply('.icon-btn');
+      MagneticEffect.apply('.footer-seal');
+    }, 500);
+  }
+
+  postRenderEffects() {
+    // Hero smoke background
+    const heroSection = document.querySelector('.hero-showroom');
+    if (heroSection) {
+      this.heroSmoke = new HeroSmokeEffect(heroSection);
+      this.heroSmoke.init();
+    }
+
+    // Glow pulse on metric boxes
+    applyGlowPulse('.metric-box');
+
+    // Animated count-up for vault amount
+    this.animateMetrics();
+  }
+
+  animateMetrics() {
+    const vaultEl = document.getElementById('metric-vault-amt');
+    if (vaultEl && this.currentCircle) {
+      const totalVault = this.currentCircle.committee.length * this.currentCircle.fdAmount;
+      SmoothCountUp.animate(vaultEl, totalVault, 1500, `${this.currentCircle.currency}`, '');
+    }
   }
 
   initDOM() {
@@ -161,6 +224,10 @@ class App {
       charterWrap.style.display = "block";
       this.charterComponent.render(this.currentCircle);
     }
+
+    if (this.dopamineEngine) {
+      this.dopamineEngine.injectHiddenTokens();
+    }
   }
 
   onStateChanged() {
@@ -185,6 +252,11 @@ class App {
     });
     this.onStateChanged();
     this.showToast("⚡ The Golden Point has been invoked!");
+
+    // Celebration particle burst
+    if (this.particleEngine) {
+      this.particleEngine.celebrationBurst(window.innerWidth / 2, window.innerHeight / 2, 60);
+    }
   }
 
   handleHonor(memberId) {
@@ -203,6 +275,11 @@ class App {
       });
       this.onStateChanged();
       this.showToast(`🤝 ${member.name} honored the pact!`);
+
+      // Celebration burst
+      if (this.particleEngine) {
+        this.particleEngine.celebrationBurst(window.innerWidth / 2, window.innerHeight / 3, 50);
+      }
     }
   }
 
@@ -256,6 +333,11 @@ class App {
     sounds.playFanfare();
     this.onStateChanged();
     this.showToast(`🏁 Request fulfilled! The Golden Point card passed to ${nextHolder.name}!`);
+
+    // Big celebration burst
+    if (this.particleEngine) {
+      this.particleEngine.celebrationBurst(window.innerWidth / 2, window.innerHeight / 2, 80);
+    }
   }
 
   // --- CONTENDER PIPELINE ACTIONS ---
@@ -363,6 +445,11 @@ class App {
 
     this.onStateChanged();
     this.showToast(`👑 Welcome ${cont.name} to the Golden Point Committee!`);
+
+    // Big celebration
+    if (this.particleEngine) {
+      this.particleEngine.celebrationBurst(window.innerWidth / 2, window.innerHeight / 2, 100);
+    }
   }
 
   handleCircleCreated(newCircle) {
@@ -372,6 +459,11 @@ class App {
     this.currentCircle = newCircle;
     this.onStateChanged();
     this.showToast(`👑 Circle "${newCircle.name}" minted successfully!`);
+
+    // Celebration
+    if (this.particleEngine) {
+      this.particleEngine.celebrationBurst(window.innerWidth / 2, window.innerHeight / 2, 70);
+    }
   }
 
   initToastListener() {

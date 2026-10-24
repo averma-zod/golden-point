@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>The Golden Point — Sovereign Card &amp; Charter</title>
+  <title>The Golden Point — Sovereign Card & Charter</title>
   <meta name="description" content="The ultimate honour-bound pact between friends. One favour. Zero excuses. Real stakes. Live card, scannable QR charter, and security vault." />
   
   <!-- OpenGraph Metadata -->
@@ -19,6 +19,8 @@
 
   <!-- Core Design System -->
   <link rel="stylesheet" href="./src/styles/main.css" />
+  <!-- Immersive Effects & Animations -->
+  <link rel="stylesheet" href="./src/styles/effects.css" />
 
   <!-- Standalone Libraries -->
   <script src="./public/libs/qrcode.min.js"></script>
@@ -76,19 +78,24 @@
       <!-- HERO SHOWROOM -->
       <section class="hero-showroom">
         <div class="hero-copy">
-          <div class="kicker">
+          <div class="kicker" data-reveal data-reveal-delay="100">
             <span id="hero-circle-society">Sahil Heights Society</span> · EST. 2026
           </div>
-          <h1 id="hero-circle-name">The Golden Point</h1>
-          <div class="hero-tagline" id="hero-circle-tagline">
+          <h1 id="hero-circle-name" data-reveal data-reveal-delay="200">The Golden Point</h1>
+          <div class="hero-tagline" id="hero-circle-tagline" data-reveal data-reveal-delay="350">
             Unlimited Redemption Card
           </div>
-          <p class="hero-desc">
+          <div class="hero-punchlines" data-reveal data-reveal-delay="420" style="margin: 10px 0 14px 0; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="punchline-tag">⚡ FORTUNE FAVORS THE OBSESSED</span>
+            <span class="punchline-tag">🛡️ ZERO EXCUSES · INSTANT COMPLIANCE</span>
+            <span class="punchline-tag">👑 TOUCH THE GOLD</span>
+          </div>
+          <p class="hero-desc" data-reveal data-reveal-delay="500">
             A single, extraordinary favour extended among the members of this Committee. Non-negotiable. One call. Zero excuses. Backed by standing Fixed Deposit commitments.
           </p>
 
           <!-- HERO METRICS -->
-          <div class="hero-metrics">
+          <div class="hero-metrics" data-reveal data-reveal-delay="650">
             <div class="metric-box">
               <div class="metric-val" id="metric-vault-amt">₹75,000</div>
               <div class="metric-lbl">Total Vault Collateral</div>
@@ -107,13 +114,13 @@
         </div>
 
         <!-- 3D CARD SHOWROOM CONTAINER -->
-        <div id="card-stage-container">
+        <div id="card-stage-container" data-reveal data-reveal-delay="400" data-reveal-style="scale">
           <!-- Populated dynamically by Card3D.js -->
         </div>
       </section>
 
       <!-- DASHBOARD / OPERATIONS CONSOLE -->
-      <div id="dashboard-view-container">
+      <div id="dashboard-view-container" data-reveal data-reveal-delay="200">
         <!-- Populated dynamically by Dashboard.js -->
       </div>
 

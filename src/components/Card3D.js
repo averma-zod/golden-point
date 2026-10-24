@@ -169,7 +169,12 @@ export class Card3D {
     }
 
     if (cardEl) {
-      // 3D Parallax Tilt Effect
+      // Audio-visual specular sheen on hover
+      cardEl.addEventListener("mouseenter", () => {
+        sounds.playShing();
+      });
+
+      // 3D Parallax Tilt Effect & Specular Light Tracking
       cardEl.addEventListener("mousemove", (e) => {
         if (this.isFlipped) return;
         const rect = cardEl.getBoundingClientRect();
@@ -182,11 +187,26 @@ export class Card3D {
         const rotateY = ((x - centerX) / centerX) * 14;
 
         cardEl.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        
+        // Virtual light specular reflection
+        const px = (x / rect.width) * 100;
+        const py = (y / rect.height) * 100;
+        const frontFace = document.getElementById("card-front-face");
+        if (frontFace) {
+          frontFace.style.background = `
+            radial-gradient(circle at ${px}% ${py}%, rgba(255, 255, 230, 0.45) 0%, transparent 60%),
+            linear-gradient(135deg, #fae8a8 0%, #dfb758 25%, #9e7420 50%, #fae8a8 75%, #dfb758 100%)
+          `;
+        }
       });
 
       cardEl.addEventListener("mouseleave", () => {
         if (!this.isFlipped) {
           cardEl.style.transform = "rotateX(0deg) rotateY(0deg)";
+          const frontFace = document.getElementById("card-front-face");
+          if (frontFace) {
+            frontFace.style.background = "";
+          }
         }
       });
 
@@ -241,8 +261,10 @@ export class Card3D {
     if (!wrap) return;
     try {
       if (typeof window.qrcode === "function") {
-        const qr = window.qrcode(0, "M");
-        qr.addData(url);
+        // Use clean compact URL for physical card QR to ensure high contrast and zero overflow
+        const qrTarget = url && url.length < 250 ? url : `${window.location.origin}${window.location.pathname}?circle=${encodeURIComponent(this.currentCircle?.id || 'sahil-heights-gp')}`;
+        const qr = window.qrcode(0, "L");
+        qr.addData(qrTarget);
         qr.make();
         wrap.innerHTML = qr.createImgTag(2, 0);
         const img = wrap.querySelector("img");

@@ -14,6 +14,9 @@ export class Card3D {
     this.isFlipped = false;
     this.currentCircle = null;
     this.viewMode = "3d"; // "3d" or "photo"
+    this.isSwiping = false;
+    this.didSwipe = false;
+    this.gyroActive = false;
   }
 
   render(circle) {
@@ -174,9 +177,9 @@ export class Card3D {
         sounds.playShing();
       });
 
-      // 3D Parallax Tilt Effect & Specular Light Tracking
+      // 3D Parallax Tilt Effect & Specular Light Tracking (Desktop Cursor)
       cardEl.addEventListener("mousemove", (e) => {
-        if (this.isFlipped) return;
+        if (this.isFlipped || this.isSwiping) return;
         const rect = cardEl.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -191,28 +194,29 @@ export class Card3D {
         // Virtual light specular reflection
         const px = (x / rect.width) * 100;
         const py = (y / rect.height) * 100;
-        const frontFace = document.getElementById("card-front-face");
-        if (frontFace) {
-          frontFace.style.background = `
-            radial-gradient(circle at ${px}% ${py}%, rgba(255, 255, 230, 0.45) 0%, transparent 60%),
-            linear-gradient(135deg, #fae8a8 0%, #dfb758 25%, #9e7420 50%, #fae8a8 75%, #dfb758 100%)
-          `;
-        }
+        this.updateSpecularLight(px, py);
       });
 
       cardEl.addEventListener("mouseleave", () => {
-        if (!this.isFlipped) {
+        if (!this.isFlipped && !this.isSwiping) {
           cardEl.style.transform = "rotateX(0deg) rotateY(0deg)";
-          const frontFace = document.getElementById("card-front-face");
-          if (frontFace) {
-            frontFace.style.background = "";
-          }
+          this.resetSpecularLight();
         }
       });
 
-      cardEl.addEventListener("click", () => {
-        this.toggleFlip();
+      // Desktop Click Flip
+      cardEl.addEventListener("click", (e) => {
+        if (!this.didSwipe) {
+          this.toggleFlip();
+        }
+        this.didSwipe = false;
       });
+
+      // Touch & Swipe Flick Physics (Mobile Apple Wallet feel)
+      this.bindTouchGestures(cardEl);
+
+      // Gyroscope & Tilt Integration
+      this.bindGyroscope(cardEl);
     }
 
     if (flipBtn) {
@@ -253,6 +257,128 @@ export class Card3D {
     const flipBtn = document.getElementById("btn-flip-card");
     if (flipBtn) {
       flipBtn.innerHTML = `🔄 Flip Card (${this.isFlipped ? 'View Front' : 'View Back & QR'})`;
+    }
+  }
+
+  updateSpecularLight(px, py) {
+    const frontFace = document.getElementById("card-front-face");
+    const backFace = document.getElementById("card-back-face");
+    const goldGrad = `
+      radial-gradient(circle at ${px}% ${py}%, rgba(255, 255, 235, 0.45) 0%, transparent 60%),
+      linear-gradient(135deg, #fae8a8 0%, #dfb758 25%, #9e7420 50%, #fae8a8 75%, #dfb758 100%)
+    `;
+    if (frontFace && !this.isFlipped) frontFace.style.background = goldGrad;
+    if (backFace && this.isFlipped) backFace.style.background = goldGrad;
+  }
+
+  resetSpecularLight() {
+    const frontFace = document.getElementById("card-front-face");
+    const backFace = document.getElementById("card-back-face");
+    if (frontFace) frontFace.style.background = "";
+    if (backFace) backFace.style.background = "";
+  }
+
+  // --- MOBILE TOUCH & SWIPE FLICK PHYSICS ---
+  bindTouchGestures(cardEl) {
+    let startX = 0;
+    let startY = 0;
+    let startTime = 0;
+    let currentDx = 0;
+
+    cardEl.addEventListener("touchstart", (e) => {
+      if (!e.touches.length) return;
+      const t = e.touches[0];
+      startX = t.clientX;
+      startY = t.clientY;
+      startTime = performance.now();
+      currentDx = 0;
+      this.isSwiping = false;
+      this.didSwipe = false;
+      cardEl.style.transition = "none";
+    }, { passive: true });
+
+    cardEl.addEventListener("touchmove", (e) => {
+      if (!e.touches.length) return;
+      const t = e.touches[0];
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+      currentDx = dx;
+
+      // Detect horizontal flick vs page scroll
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+        this.isSwiping = true;
+        this.didSwipe = true;
+        if (e.cancelable) e.preventDefault();
+
+        const baseRotY = this.isFlipped ? 180 : 0;
+        const dragRotY = baseRotY + (dx / window.innerWidth) * 200;
+        cardEl.style.transform = `rotateY(${dragRotY}deg) scale(0.97)`;
+
+        const px = Math.max(0, Math.min(100, 50 + (dx / 3)));
+        this.updateSpecularLight(px, 50);
+      }
+    }, { passive: false });
+
+    cardEl.addEventListener("touchend", () => {
+      cardEl.style.transition = "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+      const elapsed = performance.now() - startTime;
+      const velocity = Math.abs(currentDx) / Math.max(elapsed, 1);
+
+      if (this.isSwiping) {
+        if (Math.abs(currentDx) > 55 || velocity > 0.35) {
+          // Complete the flick flip
+          this.toggleFlip();
+        } else {
+          // Snap back
+          cardEl.style.transform = this.isFlipped ? "rotateY(180deg)" : "rotateY(0deg)";
+        }
+      }
+
+      setTimeout(() => {
+        cardEl.style.transition = "";
+        this.isSwiping = false;
+        this.resetSpecularLight();
+      }, 500);
+    });
+  }
+
+  // --- MOBILE GYROSCOPE & DEVICE ORIENTATION TILT ---
+  bindGyroscope(cardEl) {
+    if (typeof window === "undefined" || !window.DeviceOrientationEvent) return;
+
+    const handleOrientation = (e) => {
+      // Ignore if user is actively swiping or card element is not in DOM
+      if (this.isSwiping || !document.contains(cardEl)) return;
+
+      const gamma = e.gamma || 0; // Left-to-right tilt (-90 to 90)
+      const beta = e.beta || 0;   // Front-to-back tilt (-180 to 180)
+
+      // Calibrate for natural ~45deg phone holding posture
+      const tiltX = Math.max(-20, Math.min(20, (beta - 45) * 0.7));
+      const tiltY = Math.max(-22, Math.min(22, gamma * 0.75));
+
+      const baseRotY = this.isFlipped ? 180 : 0;
+      cardEl.style.transform = `rotateX(${-tiltX}deg) rotateY(${baseRotY + tiltY}deg)`;
+
+      // Dynamic specular highlight reflection shifted by physical tilt
+      const px = Math.max(0, Math.min(100, 50 + tiltY * 1.8));
+      const py = Math.max(0, Math.min(100, 50 + tiltX * 1.8));
+      this.updateSpecularLight(px, py);
+    };
+
+    // Request iOS 13+ permission if needed
+    if (typeof DeviceOrientationEvent.requestPermission === "function") {
+      const requestIOSPerm = () => {
+        DeviceOrientationEvent.requestPermission().then((res) => {
+          if (res === "granted") {
+            window.addEventListener("deviceorientation", handleOrientation);
+          }
+        }).catch(() => {});
+        document.removeEventListener("touchend", requestIOSPerm);
+      };
+      document.addEventListener("touchend", requestIOSPerm, { once: true });
+    } else {
+      window.addEventListener("deviceorientation", handleOrientation, { passive: true });
     }
   }
 

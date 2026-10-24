@@ -1,3 +1,5 @@
+import { haptics } from "./haptics.js";
+
 /**
  * Web Audio API synthesizer for luxury haptic sound effects
  * Zero external audio files required. Completely synthesized in real time.
@@ -32,6 +34,7 @@ class SoundEffects {
   }
 
   playFlip() {
+    haptics.medium();
     if (this.muted) return;
     try {
       this.init();
@@ -56,6 +59,7 @@ class SoundEffects {
   }
 
   playClick() {
+    haptics.light();
     if (this.muted) return;
     try {
       this.init();
@@ -80,6 +84,7 @@ class SoundEffects {
   }
 
   playForfeitAlarm() {
+    haptics.error();
     if (this.muted) return;
     try {
       this.init();
@@ -115,6 +120,7 @@ class SoundEffects {
   }
 
   playFanfare() {
+    haptics.celebration();
     if (this.muted) return;
     try {
       this.init();
@@ -143,6 +149,7 @@ class SoundEffects {
 
   // Crisp metallic sheen on card hover / light sweep
   playShing() {
+    haptics.light();
     if (this.muted) return;
     try {
       this.init();
@@ -168,6 +175,7 @@ class SoundEffects {
 
   // Subtle luxury watch / vault wheel tick on scroll
   playTick() {
+    haptics.light();
     if (this.muted) return;
     try {
       this.init();
@@ -193,6 +201,7 @@ class SoundEffects {
 
   // Explosive bass boom + golden resonance on seal break
   playSealBreak() {
+    haptics.heavy();
     if (this.muted) return;
     try {
       this.init();
@@ -229,6 +238,7 @@ class SoundEffects {
 
   // Crisp golden collectible token chime
   playCoinCollect() {
+    haptics.medium();
     if (this.muted) return;
     try {
       this.init();
@@ -252,6 +262,7 @@ class SoundEffects {
 
   // Heavy locked classified tier rejection buzz
   playLockedBuzz() {
+    haptics.error();
     if (this.muted) return;
     try {
       this.init();

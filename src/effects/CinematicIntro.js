@@ -63,10 +63,22 @@ export class CinematicIntro {
     this.resize();
     window.addEventListener('resize', () => this.resize());
 
-    // Allow clicking the seal or the button to trigger explosive reveal
-    const triggerBreak = () => this.breakSealAndDismiss();
-    document.getElementById('intro-enter-btn').addEventListener('click', triggerBreak);
-    document.getElementById('intro-seal-interactive').addEventListener('click', triggerBreak);
+    // Allow clicking or touching the seal or the button to trigger explosive reveal
+    const triggerBreak = (e) => {
+      if (e && e.type === 'touchstart') {
+        e.preventDefault();
+      }
+      this.breakSealAndDismiss();
+    };
+
+    const enterBtn = document.getElementById('intro-enter-btn');
+    const sealEl = document.getElementById('intro-seal-interactive');
+
+    enterBtn.addEventListener('click', triggerBreak);
+    enterBtn.addEventListener('touchstart', triggerBreak, { passive: false });
+
+    sealEl.addEventListener('click', triggerBreak);
+    sealEl.addEventListener('touchstart', triggerBreak, { passive: false });
 
     this.startTime = performance.now();
     this.spawnIntroParticles();

@@ -31,15 +31,27 @@ export class HeroSmokeEffect {
     this.resize();
     window.addEventListener('resize', () => this.resize());
 
-    // Mouse influence on smoke
-    this.container.addEventListener('mousemove', (e) => {
+    // Mouse & Touch influence on smoke
+    const updatePointer = (clientX, clientY) => {
       const rect = this.container.getBoundingClientRect();
-      this.mouseX = (e.clientX - rect.left) / rect.width;
-      this.mouseY = (e.clientY - rect.top) / rect.height;
+      this.mouseX = (clientX - rect.left) / rect.width;
+      this.mouseY = (clientY - rect.top) / rect.height;
+    };
+
+    this.container.addEventListener('mousemove', (e) => {
+      updatePointer(e.clientX, e.clientY);
     });
 
-    // Create cloud blobs
-    for (let i = 0; i < 12; i++) {
+    this.container.addEventListener('touchmove', (e) => {
+      if (e.touches.length) {
+        updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    // Create cloud blobs: 6 on mobile, 12 on desktop
+    const isMobile = window.innerWidth <= 920;
+    const cloudCount = isMobile ? 6 : 12;
+    for (let i = 0; i < cloudCount; i++) {
       this.clouds.push({
         x: Math.random() * this.width,
         y: Math.random() * this.height,
@@ -62,7 +74,8 @@ export class HeroSmokeEffect {
     const rect = this.container.getBoundingClientRect();
     this.width = rect.width;
     this.height = rect.height;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const isMobile = window.innerWidth <= 920;
+    const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
     this.canvas.width = this.width * dpr;
     this.canvas.height = this.height * dpr;
     this.ctx.scale(dpr, dpr);

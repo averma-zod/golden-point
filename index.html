@@ -2,10 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>The Golden Point — Sovereign Card & Charter</title>
   <meta name="description" content="The ultimate honour-bound pact between friends. One favour. Zero excuses. Real stakes. Live card, scannable QR charter, and security vault." />
   
+  <!-- Mobile PWA & App Capabilities -->
+  <meta name="theme-color" content="#080604" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Golden Point" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="./public/images/gp_seal.svg" />
+
   <!-- OpenGraph Metadata -->
   <meta property="og:title" content="The Golden Point — Unlimited Redemption Card" />
   <meta property="og:description" content="One favour. Zero excuses. Fixed Deposit security vault. Mint your friend circle's charter." />
@@ -21,6 +29,8 @@
   <link rel="stylesheet" href="./src/styles/main.css" />
   <!-- Immersive Effects & Animations -->
   <link rel="stylesheet" href="./src/styles/effects.css" />
+  <!-- Mobile-First PWA Architecture -->
+  <link rel="stylesheet" href="./src/styles/mobile.css" />
 
   <!-- Standalone Libraries -->
   <script src="./public/libs/qrcode.min.js"></script>
@@ -143,6 +153,26 @@
       Moniv Nautiyal · Sahil Malik · Akash Verma · Sahil Heights Society · In Perpetuity
     </p>
   </footer>
+
+  <!-- STICKY THUMB-ZONE BOTTOM BAR (MOBILE PWA) -->
+  <nav class="mobile-thumb-bar" id="mobile-thumb-bar" aria-label="Mobile Quick Actions">
+    <div class="thumb-bar-inner">
+      <button class="thumb-action-btn" id="thumb-btn-flip" title="Flip 3D Card">
+        <span class="thumb-icon">🔄</span>
+        <span class="thumb-lbl">Flip</span>
+      </button>
+
+      <button class="thumb-primary-cta heartbeat-btn" id="thumb-btn-primary">
+        <span class="cta-icon">⚡</span>
+        <span class="cta-text" id="thumb-primary-label">INVOKE POINT</span>
+      </button>
+
+      <button class="thumb-action-btn" id="thumb-btn-switch-view" title="Toggle Charter">
+        <span class="thumb-icon" id="thumb-view-icon">📜</span>
+        <span class="thumb-lbl" id="thumb-view-lbl">Charter</span>
+      </button>
+    </div>
+  </nav>
 
   <!-- MODAL OVERLAY -->
   <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true"></div>

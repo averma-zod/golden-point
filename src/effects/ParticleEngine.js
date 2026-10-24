@@ -16,10 +16,14 @@ export class ParticleEngine {
     this.prevMouseY = 0;
     this.isActive = true;
     this.frameId = null;
-    this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.isMobile = typeof navigator !== 'undefined' && (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth <= 920);
+    this.dpr = Math.min(window.devicePixelRatio || 1, this.isMobile ? 1.5 : 2);
     this.width = 0;
     this.height = 0;
     this.time = 0;
+    this.lastTouchX = 0;
+    this.lastTouchY = 0;
+    this.maxParticles = this.isMobile ? 150 : 450;
 
     // Gold color palette for particles
     this.goldColors = [
@@ -43,9 +47,12 @@ export class ParticleEngine {
     this.ctx = this.canvas.getContext('2d');
 
     this.resize();
-    window.addEventListener('resize', () => this.resize());
+    window.addEventListener('resize', () => {
+      this.isMobile = window.innerWidth <= 920;
+      this.resize();
+    });
 
-    // Mouse tracking
+    // Mouse tracking (Desktop)
     document.addEventListener('mousemove', (e) => {
       this.prevMouseX = this.mouseX;
       this.prevMouseY = this.mouseY;
@@ -54,9 +61,35 @@ export class ParticleEngine {
       this.spawnCursorDust(e.clientX, e.clientY);
     });
 
+    // Mobile Touch Trails: Golden ember dust on finger drag
+    document.addEventListener('touchstart', (e) => {
+      if (!e.touches.length) return;
+      const touch = e.touches[0];
+      this.lastTouchX = touch.clientX;
+      this.lastTouchY = touch.clientY;
+      this.spawnClickBurst(touch.clientX, touch.clientY);
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+      if (!e.touches.length) return;
+      const touch = e.touches[0];
+      const dx = touch.clientX - this.lastTouchX;
+      const dy = touch.clientY - this.lastTouchY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      // Throttle touch particle creation to preserve locked 60fps
+      if (dist > 12) {
+        this.spawnCursorDust(touch.clientX, touch.clientY);
+        this.lastTouchX = touch.clientX;
+        this.lastTouchY = touch.clientY;
+      }
+    }, { passive: true });
+
     // Click explosions
     document.addEventListener('click', (e) => {
-      this.spawnClickBurst(e.clientX, e.clientY);
+      if (!this.isMobile) {
+        this.spawnClickBurst(e.clientX, e.clientY);
+      }
     });
 
     // Scroll sparkle
@@ -64,11 +97,12 @@ export class ParticleEngine {
     window.addEventListener('scroll', () => {
       clearTimeout(scrollTimeout);
       this.spawnScrollSparkles();
-      scrollTimeout = setTimeout(() => {}, 100);
-    });
+      scrollTimeout = setTimeout(() => {}, 120);
+    }, { passive: true });
 
-    // Spawn ambient particles
-    this.spawnAmbientParticles(40);
+    // Adaptive ambient particle count: 18 on mobile (vs 40 on desktop)
+    const ambientCount = this.isMobile ? 18 : 40;
+    this.spawnAmbientParticles(ambientCount);
 
     this.animate();
   }
@@ -141,7 +175,7 @@ export class ParticleEngine {
 
   // --- CLICK EXPLOSION BURST ---
   spawnClickBurst(x, y) {
-    const count = 25;
+    const count = this.isMobile ? 14 : 25;
     for (let i = 0; i < count; i++) {
       const color = this.randomGold();
       const angle = (Math.PI * 2 / count) * i + (Math.random() - 0.5) * 0.4;
@@ -276,8 +310,8 @@ export class ParticleEngine {
     }
 
     // Cap particle count
-    if (this.particles.length > 500) {
-      this.particles.splice(0, this.particles.length - 500);
+    if (this.particles.length > this.maxParticles) {
+      this.particles.splice(0, this.particles.length - this.maxParticles);
     }
   }
 

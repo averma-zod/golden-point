@@ -1,0 +1,424 @@
+/* ==========================================================================
+   GOLDEN POINT — MOBILE-FIRST PWA ARCHITECTURE & THUMB-ZONE ENGINE
+   Locked 60fps, 100dvh Hero, Gyroscope Reflections, Horizontal Snap-Scroll,
+   Sticky Thumb-Zone Bar, and Web Haptics Integration.
+   ========================================================================== */
+
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --thumb-bar-height: 68px;
+}
+
+/* --- GLOBAL MOBILE RESET & TOUCH-DOWN FEEDBACK --- */
+* {
+  -webkit-tap-highlight-color: rgba(223, 183, 88, 0.15);
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: 0;
+  overflow-x: hidden;
+}
+
+@media (max-width: 920px) {
+  body {
+    padding-bottom: calc(var(--thumb-bar-height) + var(--sab) + 12px);
+  }
+}
+
+/* Touch-down immediate physical feedback */
+button:active, .btn:active, .view-tab:active, .icon-btn:active {
+  transform: scale(0.96) !important;
+  filter: brightness(1.2) contrast(1.05);
+}
+
+/* --- FULL-SCREEN 100dvh HERO & CINEMATIC INTRO --- */
+#cinematic-intro {
+  height: 100vh !important;
+  height: 100dvh !important;
+  min-height: -webkit-fill-available;
+  padding: calc(16px + var(--sat)) calc(16px + var(--sar)) calc(16px + var(--sab)) calc(16px + var(--sal));
+  box-sizing: border-box;
+}
+
+@media (max-width: 920px) {
+  .intro-title {
+    font-size: clamp(2rem, 9vw, 3rem) !important;
+  }
+  .intro-seal {
+    width: 82px !important;
+    height: 82px !important;
+  }
+  .intro-enter-btn {
+    min-height: 52px !important;
+    padding: 14px 28px !important;
+    font-size: 0.88rem !important;
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+/* --- TOP APP BAR MOBILE REFINEMENTS --- */
+@media (max-width: 920px) {
+  .top-nav {
+    padding: calc(6px + var(--sat)) 12px 6px 12px;
+  }
+  .nav-inner {
+    gap: 8px;
+  }
+  .brand-title {
+    font-size: 0.95rem !important;
+  }
+  .brand-tag {
+    font-size: 0.52rem !important;
+  }
+  .brand-logo {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .circle-picker-wrap {
+    padding: 3px 8px;
+  }
+  .circle-select {
+    font-size: 0.78rem;
+    max-width: 110px;
+    min-height: 44px;
+  }
+  #btn-nav-mint {
+    display: none; /* Moved to Thumb Zone for zero clutter */
+  }
+}
+
+/* --- CONDENSED MOBILE LIVE TICKER --- */
+@media (max-width: 920px) {
+  .dopamine-ticker-strip {
+    height: 32px !important;
+  }
+  .ticker-pulse-indicator {
+    padding: 0 10px !important;
+  }
+  .pulse-label {
+    display: none !important; /* Keep glowing dot indicator */
+  }
+  .ticker-pill {
+    font-size: 0.72rem !important;
+    margin-right: 22px !important;
+  }
+  .ticker-badge {
+    font-size: 0.58rem !important;
+    padding: 1px 6px !important;
+  }
+}
+
+/* --- VIEW TABS STRIP MOBILE --- */
+@media (max-width: 920px) {
+  .view-tabs {
+    padding: 4px 12px;
+    gap: 6px;
+  }
+  .view-tab {
+    flex: 1;
+    min-height: 46px;
+    font-size: 0.78rem;
+    padding: 8px 12px;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+  }
+}
+
+/* --- 3D CARD SHOWROOM MOBILE TOUCH & GYROSCOPE --- */
+@media (max-width: 920px) {
+  .hero-showroom {
+    grid-template-columns: 1fr !important;
+    padding: 16px 14px 20px 14px !important;
+    gap: 20px !important;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(2rem, 8vw, 2.8rem) !important;
+  }
+  .hero-tagline {
+    font-size: 1.1rem !important;
+  }
+  .hero-desc {
+    font-size: 0.85rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .card-stage {
+    perspective: 900px !important;
+    padding: 10px 0 !important;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card-3d-wrap {
+    width: 100% !important;
+    max-width: 350px !important;
+    height: 220px !important;
+    touch-action: pan-y; /* Allows natural vertical page scrolling while capturing swipe */
+    user-select: none;
+    -webkit-user-select: none;
+    margin: 0 auto;
+  }
+
+  .card-front, .card-back {
+    padding: 16px 18px !important;
+  }
+  .card-brand-title {
+    font-size: 0.95rem !important;
+  }
+  .card-center-crest img {
+    width: 48px !important;
+    height: 48px !important;
+  }
+  .card-number {
+    font-size: 1.18rem !important;
+    letter-spacing: 0.12em !important;
+  }
+  .card-holders-names {
+    font-size: 0.8rem !important;
+  }
+  .card-chip {
+    width: 32px !important;
+  }
+
+  /* Mobile card quick hint */
+  .card-stage::after {
+    content: '👆 Swipe to Flip · Tilt Phone to Reflect Gold';
+    display: block;
+    font-family: var(--font-royal);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: var(--gold-deep);
+    text-align: center;
+    margin-top: 10px;
+    opacity: 0.8;
+  }
+}
+
+/* --- HORIZONTAL SNAP-SCROLL CONTAINERS (NO VERTICAL SCROLL FATIGUE) --- */
+@media (max-width: 920px) {
+  /* Hero Metrics: Horizontal touch snap track */
+  .hero-metrics {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px !important;
+    padding: 4px 4px 10px 4px !important;
+    margin: 14px 0 !important;
+    scrollbar-width: none;
+  }
+  .hero-metrics::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero-metrics .metric-box {
+    flex: 0 0 calc(65% - 8px) !important;
+    min-width: 165px !important;
+    scroll-snap-align: start;
+    padding: 12px 14px !important;
+  }
+
+  .metric-val {
+    font-size: 1.35rem !important;
+  }
+  .metric-lbl {
+    font-size: 0.65rem !important;
+  }
+
+  /* Scarcity Radar Mobile */
+  .scarcity-radar-bar {
+    padding: 12px 14px !important;
+  }
+  .radar-countdown {
+    font-size: 0.88rem !important;
+  }
+  .radar-footer {
+    font-size: 0.68rem !important;
+  }
+
+  /* Dashboard Single Column Stacking */
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+    padding: 0 12px !important;
+  }
+
+  .glass-panel {
+    padding: 16px !important;
+  }
+}
+
+/* --- STICKY THUMB-ZONE BOTTOM BAR --- */
+.mobile-thumb-bar {
+  display: none;
+}
+
+@media (max-width: 920px) {
+  .mobile-thumb-bar {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 950;
+    background: rgba(10, 8, 4, 0.92);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-top: 1px solid rgba(223, 183, 88, 0.32);
+    box-shadow: 0 -12px 35px rgba(0, 0, 0, 0.8);
+    padding: 8px 12px calc(8px + var(--sab)) 12px;
+  }
+
+  .thumb-bar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .thumb-action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 54px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(223, 183, 88, 0.24);
+    border-radius: var(--radius-sm);
+    color: var(--ink-on-dark);
+    cursor: pointer;
+    padding: 2px 4px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .thumb-action-btn:active {
+    transform: scale(0.92);
+    background: rgba(223, 183, 88, 0.18);
+    border-color: var(--gold-pure);
+  }
+  .thumb-icon {
+    font-size: 1.15rem;
+    line-height: 1;
+  }
+  .thumb-lbl {
+    font-family: var(--font-royal);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--gold-bright);
+    margin-top: 3px;
+  }
+
+  .thumb-primary-cta {
+    flex: 1;
+    height: 50px;
+    background: linear-gradient(135deg, #dfb758 0%, #fae8a8 45%, #e0ba5a 75%, #b8860b 100%);
+    background-size: 200% auto;
+    border: 1px solid #ffffff;
+    border-radius: var(--radius-md);
+    color: #0d0a05;
+    font-family: var(--font-royal);
+    font-size: 0.88rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 22px rgba(223, 183, 88, 0.5);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    animation: goldTextShimmer 3s ease infinite, heartbeatPulse 2.2s infinite ease-in-out;
+  }
+  .thumb-primary-cta:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 10px rgba(223, 183, 88, 0.8);
+  }
+  .cta-icon {
+    font-size: 1.1rem;
+  }
+  .cta-text {
+    font-weight: 900;
+  }
+}
+
+/* --- MINIMUM 48x48px TOUCH TARGETS --- */
+@media (max-width: 920px) {
+  .btn {
+    min-height: 48px;
+    padding: 10px 18px;
+  }
+  .btn-sm {
+    min-height: 44px;
+    padding: 8px 14px;
+  }
+  .icon-btn {
+    min-width: 48px;
+    min-height: 48px;
+  }
+  .vault-collectible-token {
+    width: 48px !important;
+    height: 48px !important;
+  }
+  .token-coin {
+    width: 38px !important;
+    height: 38px !important;
+  }
+  /* Expanded touch hit area */
+  .vault-collectible-token::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+  }
+}
+
+/* --- CHARTER VIEW MOBILE OPTIMIZATION --- */
+@media (max-width: 920px) {
+  .charter-doc-container {
+    padding: 20px 16px !important;
+  }
+  .charter-preamble {
+    font-size: 0.92rem !important;
+    line-height: 1.6 !important;
+  }
+  .charter-clause {
+    font-size: 0.85rem !important;
+    line-height: 1.55 !important;
+  }
+  .founders-signatures {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+}
+
+/* --- MODAL DIALOG MOBILE REFINEMENT --- */
+@media (max-width: 920px) {
+  .modal-dialog {
+    max-width: calc(100% - 24px) !important;
+    margin: 12px auto;
+    padding: 20px 16px !important;
+    max-height: 90vh;
+    max-height: 90dvh;
+    overflow-y: auto;
+  }
+  .modal-vault-bonus {
+    padding: 24px 16px !important;
+  }
+  .bonus-stats-row {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+}

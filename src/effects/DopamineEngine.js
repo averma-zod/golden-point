@@ -109,11 +109,24 @@ export class DopamineEngine {
         </div>
       `;
 
+      if (loc.left === "50%") {
+        tokenEl.style.transform = "translateX(-50%)";
+      }
+
       if (!isCollected) {
-        tokenEl.addEventListener("click", (e) => {
+        const handleCollect = (e) => {
           e.stopPropagation();
-          this.collectToken(loc.id, tokenEl, e.clientX, e.clientY);
-        });
+          const touch = e.touches ? e.touches[0] : null;
+          const cx = touch ? touch.clientX : e.clientX;
+          const cy = touch ? touch.clientY : e.clientY;
+          this.collectToken(loc.id, tokenEl, cx, cy);
+        };
+
+        tokenEl.addEventListener("click", handleCollect);
+        tokenEl.addEventListener("touchstart", (e) => {
+          e.preventDefault();
+          handleCollect(e);
+        }, { passive: false });
       }
 
       // Ensure parent has position relative

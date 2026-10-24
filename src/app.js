@@ -130,20 +130,34 @@ class App {
     const tabCharter = document.getElementById("tab-charter");
 
     if (tabConsole && tabCharter) {
-      tabConsole.addEventListener("click", () => {
-        this.currentView = "console";
-        tabConsole.classList.add("active");
-        tabCharter.classList.remove("active");
-        sounds.playClick();
-        this.renderView();
-      });
+      tabConsole.addEventListener("click", () => this.switchView("console"));
+      tabCharter.addEventListener("click", () => this.switchView("charter"));
+    }
 
-      tabCharter.addEventListener("click", () => {
-        this.currentView = "charter";
-        tabCharter.classList.add("active");
-        tabConsole.classList.remove("active");
-        sounds.playClick();
-        this.renderView();
+    // Sticky Thumb-Zone Bottom Actions (Mobile PWA)
+    const thumbFlip = document.getElementById("thumb-btn-flip");
+    const thumbPrimary = document.getElementById("thumb-btn-primary");
+    const thumbSwitch = document.getElementById("thumb-btn-switch-view");
+
+    if (thumbFlip) {
+      thumbFlip.addEventListener("click", () => {
+        if (this.cardComponent) this.cardComponent.toggleFlip();
+      });
+    }
+
+    if (thumbPrimary) {
+      thumbPrimary.addEventListener("click", () => {
+        if (this.currentView !== "console") {
+          this.switchView("console");
+        }
+        this.handleInvoke();
+      });
+    }
+
+    if (thumbSwitch) {
+      thumbSwitch.addEventListener("click", () => {
+        const nextView = this.currentView === "console" ? "charter" : "console";
+        this.switchView(nextView);
       });
     }
 
@@ -208,6 +222,32 @@ class App {
     if (vaultAmtEl) vaultAmtEl.textContent = `${this.currentCircle.currency}${totalVault.toLocaleString()}`;
     if (membersCountEl) membersCountEl.textContent = `${this.currentCircle.committee.length} Founders`;
     if (statusEl) statusEl.textContent = this.currentCircle.activeInvocation ? "⚡ ACTIVE REQUEST" : "🛡️ VAULT SECURED";
+  }
+
+  switchView(viewName) {
+    this.currentView = viewName;
+    const tabConsole = document.getElementById("tab-console");
+    const tabCharter = document.getElementById("tab-charter");
+    const thumbViewLbl = document.getElementById("thumb-view-lbl");
+    const thumbViewIcon = document.getElementById("thumb-view-icon");
+    const thumbPrimaryLbl = document.getElementById("thumb-primary-label");
+
+    if (viewName === "console") {
+      tabConsole?.classList.add("active");
+      tabCharter?.classList.remove("active");
+      if (thumbViewLbl) thumbViewLbl.textContent = "Charter";
+      if (thumbViewIcon) thumbViewIcon.textContent = "📜";
+      if (thumbPrimaryLbl) thumbPrimaryLbl.textContent = "INVOKE POINT";
+    } else {
+      tabCharter?.classList.add("active");
+      tabConsole?.classList.remove("active");
+      if (thumbViewLbl) thumbViewLbl.textContent = "Ops";
+      if (thumbViewIcon) thumbViewIcon.textContent = "⚡";
+      if (thumbPrimaryLbl) thumbPrimaryLbl.textContent = "INVOKE POINT";
+    }
+
+    sounds.playClick();
+    this.renderView();
   }
 
   renderView() {

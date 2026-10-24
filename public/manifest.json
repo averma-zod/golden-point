@@ -1,0 +1,19 @@
+{
+  "name": "The Golden Point — Sovereign Friendship Card",
+  "short_name": "Golden Point",
+  "description": "The ultimate honour-bound pact between friends. One favour. Zero excuses. Real stakes.",
+  "start_url": "../index.html",
+  "scope": "../",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#050402",
+  "theme_color": "#080604",
+  "icons": [
+    {
+      "src": "./images/gp_seal.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

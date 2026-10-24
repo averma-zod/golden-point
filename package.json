@@ -1,0 +1,19 @@
+{
+  "name": "golden-point",
+  "version": "1.0.0",
+  "description": "The Golden Point — Sovereign Card & Charter Platform for Friend Circles",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "golden-point",
+    "charter",
+    "friendship-pact",
+    "credit-card",
+    "qr-code"
+  ],
+  "author": "Akash Verma",
+  "license": "ISC"
+}

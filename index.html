@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>The Golden Point — Sovereign Card &amp; Charter</title>
+  <meta name="description" content="The ultimate honour-bound pact between friends. One favour. Zero excuses. Real stakes. Live card, scannable QR charter, and security vault." />
+  
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="The Golden Point — Unlimited Redemption Card" />
+  <meta property="og:description" content="One favour. Zero excuses. Fixed Deposit security vault. Mint your friend circle's charter." />
+  <meta property="og:image" content="/public/images/golden_card_reference.jpg" />
+  <meta property="og:type" content="website" />
+
+  <!-- Google Fonts: Royal Cinzel, Editorial Fraunces, Modern Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Fraunces:opsz,wght,ital@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="/src/styles/main.css" />
+
+  <!-- Standalone Libraries -->
+  <script src="/public/libs/qrcode.min.js"></script>
+  <script src="/public/libs/confetti.min.js"></script>
+</head>
+<body>
+
+  <!-- TOP APP BAR -->
+  <header class="top-nav" role="banner">
+    <div class="nav-inner">
+      <div class="brand-group" id="brand-home-btn" title="The Golden Point Network">
+        <img src="/public/images/gp_seal.svg" alt="GP Seal" class="brand-logo" />
+        <div>
+          <div class="brand-title">GOLDEN POINT</div>
+          <span class="brand-tag">SOVEREIGN FRIENDSHIP PACT</span>
+        </div>
+      </div>
+
+      <!-- CIRCLE PICKER -->
+      <div class="circle-picker-wrap">
+        <span style="font-size: 0.8rem; color: var(--gold-pure);">👑</span>
+        <select class="circle-select" id="circle-select" aria-label="Select Circle">
+          <!-- Populated dynamically via App -->
+        </select>
+      </div>
+
+      <!-- NAV ACTIONS -->
+      <div class="nav-actions">
+        <button class="btn btn-primary btn-sm" id="btn-nav-mint">
+          + Mint Circle
+        </button>
+        <button class="icon-btn" id="btn-nav-sound" title="Toggle Sound Effects" aria-label="Toggle Sound">
+          🔊
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- VIEW TABS STRIP -->
+  <nav class="view-tabs" aria-label="Application Views">
+    <button class="view-tab active" id="tab-console">
+      ⚡ Operations &amp; 3D Card
+    </button>
+    <button class="view-tab" id="tab-charter">
+      📜 The Sacred Charter
+    </button>
+  </nav>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="app-container" role="main">
+    
+    <!-- CONSOLE VIEW WRAPPER (HERO + SHOWROOM + DASHBOARD) -->
+    <div id="console-view-wrapper">
+      
+      <!-- HERO SHOWROOM -->
+      <section class="hero-showroom">
+        <div class="hero-copy">
+          <div class="kicker">
+            <span id="hero-circle-society">Sahil Heights Society</span> · EST. 2026
+          </div>
+          <h1 id="hero-circle-name">The Golden Point</h1>
+          <div class="hero-tagline" id="hero-circle-tagline">
+            Unlimited Redemption Card
+          </div>
+          <p class="hero-desc">
+            A single, extraordinary favour extended among the members of this Committee. Non-negotiable. One call. Zero excuses. Backed by standing Fixed Deposit commitments.
+          </p>
+
+          <!-- HERO METRICS -->
+          <div class="hero-metrics">
+            <div class="metric-box">
+              <div class="metric-val" id="metric-vault-amt">₹75,000</div>
+              <div class="metric-lbl">Total Vault Collateral</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-val" id="metric-members-count">3 Founders</div>
+              <div class="metric-lbl">Committee Roster</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-val" id="metric-status-val" style="color: var(--accent-pending); font-size: 1.15rem;">
+                ⚡ ACTIVE REQUEST
+              </div>
+              <div class="metric-lbl">Operational Status</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3D CARD SHOWROOM CONTAINER -->
+        <div id="card-stage-container">
+          <!-- Populated dynamically by Card3D.js -->
+        </div>
+      </section>
+
+      <!-- DASHBOARD / OPERATIONS CONSOLE -->
+      <div id="dashboard-view-container">
+        <!-- Populated dynamically by Dashboard.js -->
+      </div>
+
+    </div>
+
+    <!-- CHARTER VIEW WRAPPER (FULL DOCUMENT) -->
+    <div id="charter-view-container" style="display: none;">
+      <!-- Populated dynamically by CharterView.js -->
+    </div>
+
+  </main>
+
+  <!-- SITE FOOTER -->
+  <footer class="site-footer">
+    <img src="/public/images/gp_seal.svg" class="footer-seal" alt="Seal" />
+    <p class="footer-text">
+      The Golden Point is an honour-based pact among friends.
+    </p>
+    <p class="footer-text" style="font-size: 0.72rem; color: var(--ink-subtle);">
+      Moniv Nautiyal · Sahil Malik · Akash Verma · Sahil Heights Society · In Perpetuity
+    </p>
+  </footer>
+
+  <!-- MODAL OVERLAY -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true"></div>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!-- APPLICATION ENTRY SCRIPT -->
+  <script type="module" src="/src/app.js"></script>
+</body>
+</html>

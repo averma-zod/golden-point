@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 80" width="100" height="80">
+  <defs>
+    <linearGradient id="chipMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff5c0"/>
+      <stop offset="30%" stop-color="#d4af37"/>
+      <stop offset="60%" stop-color="#aa820a"/>
+      <stop offset="100%" stop-color="#e2bf4b"/>
+    </linearGradient>
+  </defs>
+  <!-- Base Chip Body with rounded corners -->
+  <rect x="2" y="2" width="96" height="76" rx="8" fill="url(#chipMetal)" stroke="#806206" stroke-width="1.5"/>
+  <!-- Inner Contact Lines -->
+  <path d="M 2 30 L 40 30 C 45 30 48 34 48 40 C 48 46 45 50 40 50 L 2 50" fill="none" stroke="#725505" stroke-width="2"/>
+  <path d="M 98 30 L 60 30 C 55 30 52 34 52 40 C 52 46 55 50 60 50 L 98 50" fill="none" stroke="#725505" stroke-width="2"/>
+  <path d="M 32 2 L 32 30" fill="none" stroke="#725505" stroke-width="2"/>
+  <path d="M 68 2 L 68 30" fill="none" stroke="#725505" stroke-width="2"/>
+  <path d="M 32 50 L 32 78" fill="none" stroke="#725505" stroke-width="2"/>
+  <path d="M 68 50 L 68 78" fill="none" stroke="#725505" stroke-width="2"/>
+  <!-- Center Core -->
+  <rect x="42" y="34" width="16" height="12" rx="2" fill="#926d0a" stroke="#634903" stroke-width="1"/>
+</svg>

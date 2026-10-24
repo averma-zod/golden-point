@@ -36,7 +36,7 @@ export class Card3D {
 
         ${this.viewMode === 'photo' ? `
           <div style="max-width: 460px; border-radius: var(--radius-card); overflow: hidden; box-shadow: 0 16px 40px rgba(0,0,0,0.8), 0 0 24px var(--gold-glow); border: 2px solid var(--gold-pure);">
-            <img src="/public/images/golden_card_reference.jpg" alt="Authentic Golden Point Physical Card" style="width: 100%; display: block; height: auto;" />
+            <img src="./public/images/golden_card_reference.jpg" alt="Authentic Golden Point Physical Card" style="width: 100%; display: block; height: auto;" />
             <div style="background: var(--bg-surface); padding: 10px 16px; text-align: center; font-size: 0.78rem; color: var(--gold-bright); border-top: 1px solid var(--gold-deep);">
               Official Physical Golden Point Card issued at Sahil Heights Society
             </div>
@@ -59,7 +59,7 @@ export class Card3D {
               </div>
 
               <div class="card-center-crest">
-                <img src="/public/images/gp_seal.svg" alt="GP Seal" />
+                <img src="./public/images/gp_seal.svg" alt="GP Seal" />
               </div>
 
               <div class="card-front-body">
@@ -73,7 +73,7 @@ export class Card3D {
                       VALID THRU
                       <span>${circle.validThru || 'LIFETIME'}</span>
                     </div>
-                    <img src="/public/images/emv_chip.svg" class="card-chip" alt="EMV Chip" />
+                    <img src="./public/images/emv_chip.svg" class="card-chip" alt="EMV Chip" />
                   </div>
                 </div>
               </div>

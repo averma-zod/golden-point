@@ -41,7 +41,7 @@ export class CharterView {
         <header class="charter-header">
           <div class="charter-badge">GP COMMITTEE — ${circle.established || 'EST. 2026'}</div>
           
-          <img src="/public/images/gp_seal.svg" class="charter-seal" alt="Charter Seal" />
+          <img src="./public/images/gp_seal.svg" class="charter-seal" alt="Charter Seal" />
           
           <h1>The Golden Point Charter</h1>
           <div class="charter-subtitle">Extended Terms &amp; Conditions of Membership</div>
